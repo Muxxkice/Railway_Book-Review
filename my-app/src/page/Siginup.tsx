@@ -1,5 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { signUpUser } from "../api/UserApi.tsx";
+
 import {
   useForm,
   // SubmitHandler
@@ -12,7 +14,13 @@ export const Signup = () => {
     handleSubmit,
   } = useForm<SiginupUser>();
 
-  const onSubmit = (data: SiginupUser) => console.log(data);
+  const onSubmit = async (data: SiginupUser) => {
+    console.log(data);
+    const res = await signUpUser(data);
+    if (res) {
+      alert("登録完了");
+    }
+  };
 
   type SiginupUser = {
     name: string;
@@ -22,21 +30,28 @@ export const Signup = () => {
 
   return (
     <div>
-      <h1>Signin</h1>
+      <h1>Signup</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <label>名前</label>
-        <input {...register("name", { required: true })} />
+        <input id="name" {...register("name", { required: true })} />
         {errors.name && <span>Name is required</span>}
         <br />
         <label>メールアドレス</label>
-        <input {...register("email", { required: true })} />
+        <input id="email" {...register("email", { required: true })} />
         {errors.email && <span>Email is required</span>}
         <br />
         <label>パスワード</label>
-        <input type="password" {...register("password", { required: true })} />
+        <input
+          id="password"
+          s
+          type="password"
+          {...register("password", { required: true })}
+        />
         {errors.password && <span>Password name is required</span>}
         <br />
-        <button type="submit">送信</button>
+        <button type="submit" className="btn">
+          送信
+        </button>
       </form>
     </div>
   );
