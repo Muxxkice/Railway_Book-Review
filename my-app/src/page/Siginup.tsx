@@ -43,7 +43,6 @@ export const Signup = () => {
         <label>パスワード</label>
         <input
           id="password"
-          s
           type="password"
           {...register("password", { required: true })}
         />
@@ -58,3 +57,7 @@ export const Signup = () => {
 };
 
 export default Signup;
+
+//errorsがどのように動いているのか、バリデーションの正当性
+// Apiを叩かないとわからない要素とブラウザ側だけでわかるもの
+// ユーザーが正しく入力できるようなサポート

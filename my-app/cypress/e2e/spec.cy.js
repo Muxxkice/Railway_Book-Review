@@ -14,37 +14,27 @@ it('clickButton', () => {
   cy.get('#email').type("test");
   cy.get('#password').type("test");
   cy.get('.btn').click();
-  cy.get('alert');
-  cy.get('input').clear();
-
+  cy.get('span').should('not.exist')
+})
+it('post', () => {
+  cy.request('POST', 'https://api-for-missions-and-railways.herokuapp.com/users', { name: "test", email: "aaa", password: "test" })
 })
 
 it('emptyInput_click', () => {
-  cy.get('#name');
-  cy.get('#email');
-  cy.get('#password');
+  cy.get('#name').clear();
+  cy.get('#email').clear();;
+  cy.get('#password').clear();
   cy.get('.btn').click();
   cy.get('span')
 })
 
+// テストに関わるエコシステム
 
-  //   ユーザーの行動を定義する。
-
-  // 名前だけが入力されなかたった
-  // パスワードだけが入力されなかたった
-  // メールアドレスだけが入力されなかたった
-  // 送信ボタンが押されたら結果が表示される。
-
-  // 正常にログインログインできた。
+// apiの挙動はcypresがメイン
+// テストの視野をしぼっていく
+// jestを使ったテスト
 
 
 
-
-  // it("ボタンを押すとuser情報をPOSTできる", () => {
-  //   cy.intercept('POST', 'https://api-for-missions-and-railways.herokuapp.com').as('post_req')
-  // })
-
-  // 入力する
-  // メンテナンスコストがかかる
 
 

@@ -28,7 +28,7 @@ export const signUpUser = async (data: SiginupUser) => {
   try {
     const res = await instance.post(`/users`, data);
     console.log(res);
-    if (res.status == 200) {
+    if (res.status === 200) {
       return res.data;
     }
   } catch (e) {
