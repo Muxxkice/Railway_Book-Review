@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "es6",
+    "jsx": "react", //Specify JSX code generation: 'preserve', 'react-native', or 'react'.
+    "lib": ["DOM", "ES6", "DOM.Iterable", "ScriptHost"], //Specify library files to be included in the compilation.
+    "outDir": "./dist/", //Redirect output structure to the directory.
+    "sourceMap": true, //Generates corresponding '.map' file.
+    "allowSyntheticDefaultImports": true, //Allow default imports from modules with no default export. This does not affect code emit, just typechecking.
+    "moduleResolution": "node", //Specify module resolution strategy: 'node' (Node.js) or 'classic'
+    // "strict": true //Enable all strict type-checking options.
+    // "noImplicitAny": true, //Raise error on expressions and declarations with an implied any type.
+    "noEmit": true //Do not emit outputs.
+    // "skipLibCheck": true,
+    // "esModuleInterop": true,
+    // "forceConsistentCasingInFileNames": true, //Disallow inconsistently-cased references to the same file.
+    // "resolveJsonModule": true,
+    // "isolatedModules": true
+  },
+
+  "include": ["src/**/*", "tsconfig.json", "webpack.config.js"]
+}
