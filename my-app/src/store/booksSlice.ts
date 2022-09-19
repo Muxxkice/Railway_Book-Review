@@ -21,13 +21,13 @@ export const booksSlice = createSlice({
     setDetail: (state, action) => {
       state.detail = action.payload;
     },
-    setLogs: (state, action) => {
+    postLogs: (state, action) => {
       state.logs = action.payload;
     },
   },
 });
 
-export const { addBooks, setBook, bookId, setDetail, setLogs } =
+export const { addBooks, setBook, bookId, setDetail, postLogs } =
   booksSlice.actions;
 
 export default booksSlice.reducer;
