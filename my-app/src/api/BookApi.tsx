@@ -1,13 +1,9 @@
 import React from "react";
 import axios from "axios";
-import { BookType, PostBook } from "../type/UserType";
+import { BookType, PostBook } from "../type/ReviewType";
 import { Error } from "../pages/Error";
 
-axios.defaults.baseURL = "https://api-for-missions-and-railways.herokuapp.com";
-export const setDefaultHeader_book = (data: string) => {
-  axios.defaults.headers.common["Authorization"] = `Bearer ${data}`;
-};
-
+// axios.defaults.baseURL = "https://api-for-missions-and-railways.herokuapp.com";
 export const getReview = async () => {
   try {
     const res = await axios.get(`/books?offset`);

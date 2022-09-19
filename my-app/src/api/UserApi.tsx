@@ -2,17 +2,15 @@ import React from "react";
 import axios from "axios";
 
 import { LoginUser, SiginupUser, UserName } from "../type/UserType";
-import { Error } from "../page/Error";
+import { userToken } from "../store/userSlice";
+import { useAppSelector } from "../store/hooks";
+import { Error } from "../pages/Error";
 
-axios.defaults.baseURL = "https://api-for-missions-and-railways.herokuapp.com";
+// axios.defaults.baseURL = "https://api-for-missions-and-railways.herokuapp.com";
 // axios.defaults.headers.common["Content-Type"] = "application/form-data";
-export const setDefaultHeader = (data: string) => {
-  axios.defaults.headers.common["Authorization"] = `Bearer ${data}`;
-};
 
 // ユーザー認証
 export const logInUser = (data: LoginUser) => {
-  console.log(data);
   return axios
     .post("/signin", data)
     .then((res) => {
@@ -21,7 +19,7 @@ export const logInUser = (data: LoginUser) => {
         console.log(res);
         return res.data.token;
       } else {
-        return null;
+        return res.status;
       }
     })
     .catch((e) => {
@@ -40,7 +38,7 @@ export const signUp = async (data: SiginupUser) => {
       if (res.status === 200) {
         return res.data.token;
       } else {
-        return null;
+        return res.status;
       }
     })
     .catch((e) => {
@@ -51,17 +49,21 @@ export const signUp = async (data: SiginupUser) => {
 };
 
 // ユーザー名の取得
-export const getUserInfo = async () => {
-  try {
-    const res = await axios.get(`/users`);
-    if (res.status === 200) {
-      console.log(res.data);
-      return res.data;
-    }
-  } catch (error) {
-    console.log(error);
-    return <Error message={error.ErrorMessageJP} />;
-  }
+export const getUserName = async () => {
+  axios
+    .get(`/users`)
+    .then((res) => {
+      if (res.status === 200) {
+        console.log(res.data.name);
+        return res.data.name;
+      } else {
+        return null;
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      return <Error message={error.ErrorMessageJP} />;
+    });
 };
 
 // ユーザー名の変更
@@ -71,7 +73,7 @@ export const changeUserName = (data: UserName) => {
     .put(`/users`, data)
     .then((res) => {
       if (res.status === 200) {
-        console.log(res.data.name);
+        console.log(res);
         return res.data.name;
       } else {
         return null;
