@@ -1,17 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../compornent/useAuth";
-// import Login from "../page/Login";
-import { useAppSelector } from "../store/hooks";
-// import "./header.scss";
+import { useAppSelector, useAppDispatch } from "../store/hooks";
+import { userName } from "../store/userSlice";
+import { getUserName } from "../api/UserApi";
+import "./header.scss";
+
 export const Header = () => {
   const { logOutUser } = useAuth();
-
   const isAuth = useAppSelector((state) => state.user.isAuth);
   const username = useAppSelector((state) => state.user.name);
+  const istoken = useAppSelector((state) => state.user.isToken);
   const navigate = useNavigate();
+  console.log(username);
 
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    (async () => {
+      if (isAuth) {
+        const user = await getUserName();
+        console.log(user);
+        if (user !== null) {
+          console.log(user);
+          dispatch(userName(user));
+        }
+      }
+    })();
+  }, [isAuth]);
   const onClickLogout = () => {
     console.log("ログアウト");
     const res = logOutUser();
@@ -29,7 +46,6 @@ export const Header = () => {
         <button type="submit" onClick={onClickLogout}>
           ログアウト
         </button>
-        {/* <Link to="/test">テスト</Link> */}
       </header>
     );
   } else {
