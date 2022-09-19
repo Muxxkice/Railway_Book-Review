@@ -7,6 +7,7 @@ import {
 import { useDropzone } from "react-dropzone";
 
 import { useAppSelector, useAppDispatch } from "../store/hooks";
+import { setIcon } from "../store/userSlice";
 import { useAuth } from "../compornent/useAuth";
 import { SiginupUser } from "../type/UserType";
 import "./signup.scss";
@@ -20,7 +21,7 @@ export const Signup = () => {
   const { signup } = useAuth();
 
   const dispatch = useAppDispatch();
-  const icon_redux = useAppSelector((state) => state.posts.user);
+  const icon_redux = useAppSelector((state) => state.user.icon);
 
   const [icon, setIcon] = useState();
   const [isIcon, setIsIcon] = useState<boolean>(false); //画像データがあるか
@@ -55,31 +56,6 @@ export const Signup = () => {
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-
-  // const onChangeIcon = (event) => {
-  //   const iconData = event.target.files[0];
-  //   console.log(event.target.files);
-
-  //   if (event.target.files.length > 0) {
-  //     setIsIcon(true);
-  //     const compresserData = new Compressor(iconData, {
-  //       quality: 0.6,
-  //       success(result) {
-  //         console.log(result);
-  //       },
-  //       maxWidth: 400,
-  //       maxHeight: 400,
-  //       mimeType: "image/png",
-  //       error(err) {
-  //         console.log(err.message);
-  //         setErrorMessage(err.message);
-  //       },
-  //     });
-  //     console.log(compresserData);
-  //   } else {
-  //     setIsIcon(false);
-  //   }
-  // };
 
   const onSubmit = async (data: SiginupUser) => {
     console.log(icon);

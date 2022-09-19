@@ -1,18 +1,22 @@
 import React, { useMemo, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { useAuth } from "../compornent/useAuth";
 import { changeUserName, postIcon } from "../api/UserApi";
 import { UserName } from "../type/UserType";
-import "./profile.scss";
+import { useAppSelector, useAppDispatch } from "../store/hooks";
+import { userName } from "../store/userSlice";
+
+// import "./profile.scss";
 
 export const Profile = () => {
-  const { userName, setUserName } = useAuth();
   const [flg, setFlg] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+
+  const username = useAppSelector((state) => state.user.name);
 
   const defaultValues = useMemo(() => {
     return {
-      name: userName,
+      name: username,
     };
   }, [userName]);
 
@@ -31,7 +35,8 @@ export const Profile = () => {
     console.log(data);
     console.log("click");
     const res = await changeUserName(data);
-    setUserName(res);
+    // setUserName(res);
+    dispatch(userName(res));
     setFlg(true);
   };
 
@@ -53,11 +58,11 @@ export const Profile = () => {
       ) : (
         <></>
       )}
-      <p>現在のの名前:{userName}</p>
+      <p>現在のの名前:{username}</p>
       <form onSubmit={handleSubmit(onSubmit)}>
         <input
           id="name"
-          placeholder={userName}
+          placeholder={username}
           {...register("name", { required: true })}
         />
         {errors.name && <span>Name is required</span>}

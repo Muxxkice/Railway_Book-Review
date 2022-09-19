@@ -1,13 +1,15 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./header.scss";
+
 import { useAuth } from "../compornent/useAuth";
 // import Login from "../page/Login";
 import { useAppSelector } from "../store/hooks";
+// import "./header.scss";
 export const Header = () => {
-  const { userName, logOutUser } = useAuth();
+  const { logOutUser } = useAuth();
 
   const isAuth = useAppSelector((state) => state.user.isAuth);
+  const username = useAppSelector((state) => state.user.name);
   const navigate = useNavigate();
 
   const onClickLogout = () => {
@@ -19,7 +21,7 @@ export const Header = () => {
     return (
       <header>
         <h1>Book Review</h1>
-        <p>こんにちは{userName}さん</p>
+        <p>こんにちは{username}さん</p>
         <Link to="/">ホーム</Link>
         <Link to="/profile">ユーザー情報</Link>
         <Link to="/login">ログイン</Link>

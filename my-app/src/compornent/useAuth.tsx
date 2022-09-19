@@ -6,24 +6,23 @@ import { getUserInfo, logInUser, signUp, postIcon } from "../api/UserApi";
 // import { setDefaultHeader } from "../api/BookApi";
 import { setDefaultHeader } from "../api/UserApi";
 import { setDefaultHeader_book } from "../api/BookApi";
-import { LoginUser, SiginupUser } from "../type/UserType";
 
+import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../store/hooks";
-import { userIsAuth, usertoken } from "../store/userSlice";
+import { userIsAuth, isToken, userToken, userName } from "../store/userSlice";
+import { LoginUser, SiginupUser } from "../type/UserType";
 
 export const useAuth = () => {
   const [cookies, setCookie, removeCookie] = useCookies<string>(["userToken"]);
-  const [istoken, setIsToken] = useState<boolean>(false); //トークンの有無
+  // const [istoken, setIsToken] = useState<boolean>(false); //トークンの有無
   // const [isAuth, setIsAuth] = useState<boolean>(false); //ログイン判定
-  const [userName, setUserName] = useState<string>("ゲスト"); //ユーザー名
   const [icon, setIcon] = useState(); //アイコン
+  const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
   const isAuth = useAppSelector((state) => state.user.isAuth);
-  const token = useAppSelector((state) => state.user.token);
 
   useEffect(() => {
-    console.log(cookies);
     setDefaultHeader(cookies.userToken);
     setDefaultHeader_book(cookies.userToken);
   }, [cookies]);
@@ -32,7 +31,7 @@ export const useAuth = () => {
     (async () => {
       if (isAuth) {
         const user = await getUserInfo();
-        setUserName(user.name);
+        dispatch(userName(user.name));
         return;
       }
     })();
@@ -44,16 +43,19 @@ export const useAuth = () => {
 
   const login = async (data: LoginUser) => {
     const res = await logInUser(data);
+
     if (res !== null) {
       dispatch(userIsAuth(true));
-      setCookie("userToken", res);
+      setCookie("Token", res);
+
+      dispatch(userToken(cookies.userToken));
+      dispatch(isToken(true));
       setDefaultHeader(cookies.userToken);
       setDefaultHeader_book(cookies.userToken);
-      setIsToken(true);
+      navigate("/");
     } else {
-      setIsToken(false);
-      // setIsAuth(false);
-      dispatch(userIsAuth(false));
+      // setIsToken(false);
+      dispatch(isToken(false));
     }
   };
 
@@ -96,9 +98,8 @@ export const useAuth = () => {
   };
 
   const logOutUser = () => {
-    removeCookie("userToken");
+    removeCookie("Token");
     dispatch(userIsAuth(false));
-    // console.log(cookies);
   };
 
   // 状態の永続化
@@ -109,10 +110,7 @@ export const useAuth = () => {
     login,
     signup,
     cookies,
-    isAuth,
-    userName,
     logOutUser,
-    setUserName,
   };
 };
 export default useAuth;

@@ -3,22 +3,27 @@ import React, { useEffect, useState } from "react";
 import Header from "../compornent/Header";
 import { useAuth } from "../compornent/useAuth";
 import { useReview } from "../compornent/useReview";
-import { BookType } from "../type/UserType";
-import Test from "../compornent/Test";
 
-import { useAppSelector } from "../store/hooks";
+import { BookType } from "../type/UserType";
+
+import { useAppSelector, useAppDispatch } from "../store/hooks";
 
 import "./home.scss";
 import { useNavigate } from "react-router-dom";
+import { bookId } from "../store/booksSlice";
 
 export const Home = () => {
-  const { books, onClickFetchMore } = useReview();
+  const { onClickFetchMore } = useReview();
+  const dispatch = useAppDispatch();
+  const [count, setCount] = useState<number>(0);
   const navigate = useNavigate();
   const isAuth = useAppSelector((state) => state.user.isAuth);
+  const books = useAppSelector((state) => state.posts.book);
+  console.log(isAuth);
 
-  const [count, setCount] = useState<number>(0);
-  if (books != null) {
-  }
+  // if (books != null) {
+  //   return <></>;
+  // }
 
   const ReviewList = books.map((booklog: BookType) => {
     if (books === null) return <></>;
@@ -42,7 +47,9 @@ export const Home = () => {
         <button
           className="booklog-container__button"
           onClick={() => {
-            // navigate(`detail/${booklog.id}`);
+            console.log(booklog.id);
+            dispatch(bookId(booklog.id));
+            navigate(`detail/${booklog.id}`);
           }}
         >
           詳細

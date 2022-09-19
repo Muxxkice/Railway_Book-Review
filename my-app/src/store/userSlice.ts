@@ -3,26 +3,35 @@ import { createSlice } from "@reduxjs/toolkit";
 export const userSlice = createSlice({
   name: "users",
   initialState: {
-    user: [],
     isAuth: false,
-    token: false,
-    name: "",
+    isToken: false, //トークンの有無
+    token: "", //token
+    name: "gest", //ユーザーネーム
+    icon: "", //アイコン
+    cookie: "", //クッキー
   },
   reducers: {
     setIcon: (state, action) => {
-      state.user = action.payload;
-    },
-    addIcon: (state, action) => {
-      state.user.push(action.payload);
+      state.icon = action.payload;
     },
     userIsAuth: (state, action) => {
       state.isAuth = action.payload;
     },
-    usertoken: (state, action) => {
+    isToken: (state, action) => {
+      state.isToken = action.payload;
+    },
+    userToken: (state, action) => {
       state.token = action.payload;
+    },
+    userName: (state, action) => {
+      state.name = action.payload;
+    },
+    cookie: (state, action) => {
+      state.name = action.payload;
     },
   },
 });
 
-export const { addIcon, setIcon, userIsAuth, usertoken } = userSlice.actions;
+export const { setIcon, userIsAuth, isToken, userToken, userName, cookie } =
+  userSlice.actions;
 export default userSlice.reducer;

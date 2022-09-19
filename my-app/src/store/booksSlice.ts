@@ -4,8 +4,9 @@ export const booksSlice = createSlice({
   name: "bookList",
   initialState: {
     book: [],
-    user: false,
-    token: [],
+    id: "",
+    detail: [],
+    logs: [],
   },
   reducers: {
     setBook: (state, action) => {
@@ -14,12 +15,19 @@ export const booksSlice = createSlice({
     addBooks: (state, action) => {
       state.book.push(action.payload);
     },
-    isAuth2: (state, action) => {
-      state.user = action.payload;
+    bookId: (state, action) => {
+      state.book = action.payload;
+    },
+    setDetail: (state, action) => {
+      state.detail = action.payload;
+    },
+    setLogs: (state, action) => {
+      state.logs = action.payload;
     },
   },
 });
 
-export const { addBooks, setBook, isAuth2 } = booksSlice.actions;
+export const { addBooks, setBook, bookId, setDetail, setLogs } =
+  booksSlice.actions;
 
 export default booksSlice.reducer;

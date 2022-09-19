@@ -12,9 +12,11 @@ export const setDefaultHeader = (data: string) => {
 
 // ユーザー認証
 export const logInUser = (data: LoginUser) => {
+  console.log(data);
   return axios
-    .post(`/signin`, data)
+    .post("/signin", data)
     .then((res) => {
+      console.log(res);
       if (res.status === 200) {
         console.log(res);
         return res.data.token;
@@ -53,6 +55,7 @@ export const getUserInfo = async () => {
   try {
     const res = await axios.get(`/users`);
     if (res.status === 200) {
+      console.log(res.data);
       return res.data;
     }
   } catch (error) {

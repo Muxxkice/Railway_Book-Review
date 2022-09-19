@@ -57,3 +57,48 @@ export const getDetail = async (id) => {
     console.log(error);
   }
 };
+//本の詳細
+export const getBookDetail = (id: string) => {
+  console.log(id);
+  return axios
+    .get(`/books/${id}`)
+    .then((res) => {
+      console.log(res);
+      if (res.status === 200) {
+        console.log(res);
+        return res.data;
+      } else {
+        return null;
+      }
+    })
+    .catch((e) => {
+      console.log(e);
+      console.log(e.ErrorMessageJP);
+      return <Error message={e.ErrorMessageJP} />;
+    });
+};
+
+//レビューのログ
+
+// ログを送る
+
+export const getBooklog = (data) => {
+  console.log(data);
+
+  return axios
+    .post(`/logs`, data)
+    .then((res) => {
+      console.log(res);
+      if (res.status === 200) {
+        console.log(res);
+        return res.data;
+      } else {
+        return null;
+      }
+    })
+    .catch((e) => {
+      console.log(e);
+      console.log(e.ErrorMessageJP);
+      return <Error message={e.ErrorMessageJP} />;
+    });
+};

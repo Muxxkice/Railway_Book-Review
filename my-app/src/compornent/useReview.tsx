@@ -15,8 +15,6 @@ export const useReview = () => {
   // const [id, setId] = useState<string>(); //本のid
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  const books_redux = useAppSelector((state) => state.posts.book);
   // console.log(books_redux);
 
   useEffect(() => {
@@ -54,8 +52,6 @@ export const useReview = () => {
   // 無限スクロール方式の場合の
   // ページをパラネーションとして保持する
 
-  return { books, onClickFetchMore, onClickPostbook };
+  return { onClickFetchMore, onClickPostbook };
 };
 export default useReview;
-
-//
