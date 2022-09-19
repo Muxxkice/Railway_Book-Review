@@ -2,40 +2,40 @@ import { useState, useEffect } from "react";
 import Compressor from "compressorjs";
 import { useCookies } from "react-cookie";
 
-import { getUserInfo, logInUser, signUp, postIcon } from "../api/UserApi";
+import { getUserName, logInUser, signUp, postIcon } from "../api/UserApi";
 // import { setDefaultHeader } from "../api/BookApi";
 import { setDefaultHeader } from "../api/UserApi";
 import { setDefaultHeader_book } from "../api/BookApi";
 
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../store/hooks";
-import { userIsAuth, isToken, userToken, userName } from "../store/userSlice";
+import {
+  userIsAuth,
+  isToken,
+  userToken,
+  userName,
+  setIcon,
+} from "../store/userSlice";
 import { LoginUser, SiginupUser } from "../type/UserType";
 
 export const useAuth = () => {
-  const [cookies, setCookie, removeCookie] = useCookies<string>(["userToken"]);
-  // const [istoken, setIsToken] = useState<boolean>(false); //トークンの有無
-  // const [isAuth, setIsAuth] = useState<boolean>(false); //ログイン判定
-  const [icon, setIcon] = useState(); //アイコン
-  const navigate = useNavigate();
+  const [cookies, setCookie, removeCookie] = useCookies<string>(["Token"]);
 
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const isAuth = useAppSelector((state) => state.user.isAuth);
+  const istoken = useAppSelector((state) => state.user.isToken);
 
   useEffect(() => {
-    setDefaultHeader(cookies.userToken);
-    setDefaultHeader_book(cookies.userToken);
+    if (isAuth && istoken) {
+      setDefaultHeader(cookies.Token);
+      setDefaultHeader_book(cookies.Token);
+    } else {
+      dispatch(userIsAuth(false));
+      dispatch(userToken(""));
+      dispatch(isToken(false));
+    }
   }, [cookies]);
-
-  useEffect(() => {
-    (async () => {
-      if (isAuth) {
-        const user = await getUserInfo();
-        dispatch(userName(user.name));
-        return;
-      }
-    })();
-  }, [isAuth]);
 
   // クッキーはクライアント側でさわれてはいけない
   // サーバーが401になってるにか
@@ -44,17 +44,20 @@ export const useAuth = () => {
   const login = async (data: LoginUser) => {
     const res = await logInUser(data);
 
-    if (res !== null) {
-      dispatch(userIsAuth(true));
+    if (res !== null && res !== 401) {
       setCookie("Token", res);
-
-      dispatch(userToken(cookies.userToken));
+      dispatch(userToken(cookies.Token));
+      dispatch(userIsAuth(true));
       dispatch(isToken(true));
-      setDefaultHeader(cookies.userToken);
-      setDefaultHeader_book(cookies.userToken);
+      setDefaultHeader(cookies.Token);
+      setDefaultHeader_book(cookies.Token);
       navigate("/");
-    } else {
-      // setIsToken(false);
+      const user = await getUserName();
+      console.log(user);
+      dispatch(userName(user));
+    } else if (res === 401) {
+      console.log(res);
+      dispatch(isToken(false));
       dispatch(isToken(false));
     }
   };
@@ -71,7 +74,12 @@ export const useAuth = () => {
     //api叩くタイミング
     if (res !== null) {
       setCookie("userToken", res);
-      setDefaultHeader(cookies.userToken);
+      setDefaultHeader(cookies.Token);
+      setDefaultHeader_book(cookies.Token);
+
+      dispatch(userIsAuth(true));
+      dispatch(userToken(cookies.Token));
+      dispatch(isToken(true));
 
       if (cookies !== null && icon !== null) {
         new Compressor(icon, {
@@ -80,26 +88,24 @@ export const useAuth = () => {
             console.log(result);
             const formData = new FormData();
             formData.append("file", result);
-            const icon_res = await postIcon(icon, cookies.userToken);
+            const icon_res = await postIcon(icon, cookies.Token);
             //ブラウザ側で対処するか
-            //アップロードした情報がユーザー情報と紐づけて
+            //アップロードした情報がユーザー情報と紐づけられている
             console.log(icon_res);
+            if (icon_res !== null) {
+              dispatch(setIcon(icon_res));
+            }
           },
 
           maxWidth: 400,
           maxHeight: 400,
-          mimeType: "image/png", //TYpeについて調べ直し
+          mimeType: "image/jpeg",
           error(err) {
             console.log(err.message);
           },
         });
       }
     }
-  };
-
-  const logOutUser = () => {
-    removeCookie("Token");
-    dispatch(userIsAuth(false));
   };
 
   // 状態の永続化
@@ -110,7 +116,6 @@ export const useAuth = () => {
     login,
     signup,
     cookies,
-    logOutUser,
   };
 };
 export default useAuth;

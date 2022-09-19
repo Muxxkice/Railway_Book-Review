@@ -1,14 +1,12 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { useAuth } from "../compornent/useAuth";
 import { useAppSelector, useAppDispatch } from "../store/hooks";
-import { userName } from "../store/userSlice";
+import { userIsAuth, isToken, userToken, userName } from "../store/userSlice";
 import { getUserName } from "../api/UserApi";
 import "./header.scss";
 
 export const Header = () => {
-  const { logOutUser } = useAuth();
   const isAuth = useAppSelector((state) => state.user.isAuth);
   const username = useAppSelector((state) => state.user.name);
   const istoken = useAppSelector((state) => state.user.isToken);
@@ -29,9 +27,13 @@ export const Header = () => {
       }
     })();
   }, [isAuth]);
-  const onClickLogout = () => {
-    console.log("ログアウト");
-    const res = logOutUser();
+
+  const logOut = () => {
+    // removeCookie("Token");
+    dispatch(userIsAuth(false));
+    dispatch(userToken(""));
+    dispatch(userName(""));
+    dispatch(isToken(false));
   };
 
   if (isAuth) {
@@ -43,7 +45,7 @@ export const Header = () => {
         <Link to="/profile">ユーザー情報</Link>
         <Link to="/login">ログイン</Link>
         <Link to="/new">投稿</Link>
-        <button type="submit" onClick={onClickLogout}>
+        <button type="submit" onClick={logOut}>
           ログアウト
         </button>
       </header>
