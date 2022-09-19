@@ -3,7 +3,7 @@ import React, { useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 
-import { PostBook } from "../type/UserType";
+import { PostBook } from "../type/ReviewType";
 import { postBook } from "../api/BookApi";
 import "./new.scss";
 

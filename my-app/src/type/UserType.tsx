@@ -11,23 +11,6 @@ export type LoginUser = {
   password: string;
 };
 
-export type BookType = {
-  id: string;
-  title: string;
-  url: string;
-  detail: string;
-  review: string;
-  reviewer: string;
-  isMine: true;
-};
-
-export type PostBook = {
-  title: string;
-  url: string;
-  detail: string;
-  review: string;
-};
-
 export type UserName = {
   name: string;
 };
