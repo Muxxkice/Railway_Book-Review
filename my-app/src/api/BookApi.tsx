@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { BookType, PostBook } from "../type/UserType";
-import { Error } from "../page/Error";
+import { Error } from "../pages/Error";
 
 axios.defaults.baseURL = "https://api-for-missions-and-railways.herokuapp.com";
 export const setDefaultHeader_book = (data: string) => {
@@ -12,6 +12,7 @@ export const getReview = async () => {
   try {
     const res = await axios.get(`/books?offset`);
     if (res.status === 200) {
+      console.log(res);
       return res.data;
     }
   } catch (error) {
@@ -78,17 +79,15 @@ export const getBookDetail = (id: string) => {
     });
 };
 
-//レビューのログ
-
 // ログを送る
-
-export const getBooklog = (data) => {
-  console.log(data);
-
+export const postBooklog = (id: string) => {
+  console.log(id);
+  const data = {
+    selectBookId: id,
+  };
   return axios
     .post(`/logs`, data)
     .then((res) => {
-      console.log(res);
       if (res.status === 200) {
         console.log(res);
         return res.data;
