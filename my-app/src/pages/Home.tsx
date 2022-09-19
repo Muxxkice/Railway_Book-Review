@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { useCookies } from "react-cookie";
 import Header from "../compornent/Header";
-import { getReview } from "../api/BookApi";
+
+import { getReview, postBooklog, fetchMore } from "../api/BookApi";
+import { setDefaultHeader } from "../api/index";
+
 import { useAppSelector, useAppDispatch } from "../store/hooks";
 import { bookId, setBook } from "../store/booksSlice";
-import { postBooklog, fetchMore } from "../api/BookApi";
-import { BookType } from "../type/UserType";
+import { userIsAuth, isToken, userToken } from "../store/userSlice";
+import { BookType } from "../type/ReviewType";
 import "./home.scss";
-import { ImportsNotUsedAsValues } from "typescript";
 
 export const Home = () => {
   const dispatch = useAppDispatch();
   const [count, setCount] = useState<number>(0);
   const [isbooks, setisbooks] = useState(false);
+  const [cookies] = useCookies<string>(["Token"]);
 
   const [books, setBooks] = useState<Array<BookType>>([]);
   const [offset, setOffset] = useState<number>(10); //offsetのカウント
@@ -22,7 +25,17 @@ export const Home = () => {
 
   const isAuth = useAppSelector((state) => state.user.isAuth);
   const reviews = useAppSelector((state) => state.posts.book);
-  console.log(isAuth);
+  const istoken = useAppSelector((state) => state.user.isToken);
+
+  useEffect(() => {
+    if (isAuth && istoken) {
+      setDefaultHeader(cookies.Token);
+    } else {
+      dispatch(userIsAuth(false));
+      dispatch(userToken(""));
+      dispatch(isToken(false));
+    }
+  }, [cookies]);
 
   useEffect(() => {
     (async () => {
