@@ -1,12 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+interface DetailState {
+  title: string;
+  url: string;
+  detail: string;
+  review: string;
+  isMine: boolean;
+}
 export const booksSlice = createSlice({
   name: "bookList",
   initialState: {
     book: [],
     id: "",
-    detail: [],
-    logs: [],
+    detail: { title: "", url: "", detail: "", review: "", isMine: false },
   },
   reducers: {
     setBook: (state, action) => {
@@ -21,13 +27,9 @@ export const booksSlice = createSlice({
     setDetail: (state, action) => {
       state.detail = action.payload;
     },
-    postLogs: (state, action) => {
-      state.logs = action.payload;
-    },
   },
 });
 
-export const { addBooks, setBook, bookId, setDetail, postLogs } =
-  booksSlice.actions;
+export const { addBooks, setBook, bookId, setDetail } = booksSlice.actions;
 
 export default booksSlice.reducer;
