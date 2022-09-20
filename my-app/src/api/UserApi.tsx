@@ -50,10 +50,11 @@ export const signUp = async (data: SiginupUser) => {
 
 // ユーザー名の取得
 export const getUserName = async () => {
-  axios
+  return axios
     .get(`/users`)
     .then((res) => {
       if (res.status === 200) {
+        console.log(res);
         console.log(res.data.name);
         return res.data.name;
       } else {

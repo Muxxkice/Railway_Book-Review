@@ -8,10 +8,9 @@ import "./header.scss";
 
 export const Header = () => {
   const isAuth = useAppSelector((state) => state.user.isAuth);
-  const username = useAppSelector((state) => state.user.name);
+  const username = useAppSelector((state) => state.user.user_name);
   const istoken = useAppSelector((state) => state.user.isToken);
   const navigate = useNavigate();
-  console.log(username);
 
   const dispatch = useAppDispatch();
 
@@ -19,10 +18,13 @@ export const Header = () => {
     (async () => {
       if (isAuth) {
         const user = await getUserName();
-        console.log(user);
+        // console.log(user);
         if (user !== null) {
+          console.log("白膠木内");
           console.log(user);
           dispatch(userName(user));
+        } else {
+          console.log("null");
         }
       }
     })();
