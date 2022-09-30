@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import Compressor from "compressorjs";
 import { useDropzone } from "react-dropzone";
@@ -9,21 +9,37 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { signUp, postIcon } from "../api/UserApi";
 import { useAppSelector, useAppDispatch } from "../store/hooks";
-import { userIsAuth, userToken, setIcon } from "../store/userSlice";
+import {
+  userIsAuth,
+  userToken,
+  setIcon,
+  setOpen,
+  setMessage,
+} from "../store/userSlice";
 import { MuiSnackbar } from "../compornent/MuiSnackbar";
 import { SiginupUser } from "../type/UserType";
+
 import "./signup.scss";
+export type SnackbarContextType = {
+  message: string; //スナックバーに表示するもの
+  /** Snackbar の色 */
+  // severity:
+};
 
 export const Signup = () => {
-  // const [authState, setAuthState] = useState(undefined);
-  const [cookies, setCookie] = useCookies<string>(["Token"]); //クッキー
+  const [cookies, setCookie, removeCookie] = useCookies<string>(["Token"]);
+
   const [icon, setIcon] = useState<FormData>();
   const [isIcon, setIsIcon] = useState<boolean>(false); //画像データがあるか
   const [errorMessage, setErrorMessage] = useState<string>(); //エラーメッセージ
+  const [successMessage, setSuccessMessage] = useState<string>(""); //エラーメッセージ
   const [previewPath, setPreviewPath] = useState<string>(); //プレビュー用]
   const [posticonResult, setposticonResult] = useState(false); //iconのポストが成功したか
+  const [iconState, setIconState] = useState(false);
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [finish, setFinish] = useState(false);
 
   const {
     register,
@@ -43,6 +59,7 @@ export const Signup = () => {
         console.log(formData.get("file"));
         setIcon(formData);
         setIsIcon(true);
+
         const iconurl = URL.createObjectURL(result);
         setPreviewPath(iconurl);
       },
@@ -52,6 +69,7 @@ export const Signup = () => {
       error(err) {
         console.log("画像の圧縮の失敗");
         console.log(err.message);
+        setErrorMessage(err.message);
       },
     });
   }, []);
@@ -62,12 +80,30 @@ export const Signup = () => {
     signup(data);
   };
 
+  // useEffect(() => {
+  //   (async () => {
+  //     const icon_res = await postIcon(icon);
+  //     if (icon_res.status === 200) {
+  //       console.log("画像あり＋signUp成功");
+  //       console.log(icon_res);
+  //       dispatch(setMessage("ログイン完了"));
+  //       dispatch(setOpen(true));
+  //       navigate("/");
+  //     } else {
+  //       console.log(icon_res);
+  //       console.log("画像あり＋signUp失敗(画像部分での失敗)");
+  //       setposticonResult(false);
+  //     }
+  //   })();
+  // }, [iconState]);
+
   const signUpwithIcon = async () => {
     const icon_res = await postIcon(icon);
     if (icon_res.status === 200) {
       console.log("画像あり＋signUp成功");
       console.log(icon_res);
-      dispatch(userIsAuth(true));
+      dispatch(setMessage("ログイン完了"));
+      dispatch(setOpen(true));
       navigate("/");
     } else {
       console.log(icon_res);
@@ -80,11 +116,16 @@ export const Signup = () => {
     const res = await signUp(data);
 
     if (res !== null) {
+      console.log(res);
       setCookie("Token", res);
       dispatch(userToken(res));
       if (isIcon) {
+        setIconState(true);
+        dispatch(setOpen(true));
         signUpwithIcon();
       } else if (isIcon === false) {
+        setSuccessMessage("ログイン成功");
+        dispatch(setOpen(true));
         console.log("画像なし＋signUp成功");
         dispatch(userIsAuth(true));
         navigate("/");
@@ -96,6 +137,7 @@ export const Signup = () => {
 
   return (
     <div className="login-container">
+      <MuiSnackbar success={successMessage} />
       <h1>Signup</h1>
       <form aria-label="form" onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor="name">Name</label>
@@ -151,7 +193,6 @@ export const Signup = () => {
           <img src={previewPath} />
         </div>
       )}
-      <MuiSnackbar />
     </div>
   );
 };

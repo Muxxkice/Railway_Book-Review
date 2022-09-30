@@ -7,7 +7,6 @@ import { Audio, ThreeDots } from "react-loader-spinner";
 export const Loader = () => {
   return (
     <>
-      <h1>ローディング中</h1>
       <ThreeDots
         height="80"
         width="80"
@@ -18,6 +17,7 @@ export const Loader = () => {
         // wrapperClassName="name"
         visible={true}
       />
+      <p>Loading...</p>
     </>
   );
 };

@@ -1,14 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 export const userSlice = createSlice({
   name: "users",
   initialState: {
+    // trueになったあとfalseに落とすタイミング
     isAuth: false,
-    isToken: false, //トークンの有無
     token: "", //token
-    name: "gest", //ユーザーネーム
+    user_name: "gest", //ユーザーネーム
     icon: "", //アイコン
-    cookie: "", //クッキー
+    current: "", //現在地
+    open: false, //アラートの表示、非表示
+    message: "", //アラートのメッセージ
   },
   reducers: {
     setIcon: (state, action) => {
@@ -17,21 +19,32 @@ export const userSlice = createSlice({
     userIsAuth: (state, action) => {
       state.isAuth = action.payload;
     },
-    isToken: (state, action) => {
-      state.isToken = action.payload;
-    },
+
     userToken: (state, action) => {
       state.token = action.payload;
     },
     userName: (state, action) => {
-      state.name = action.payload;
+      state.user_name = action.payload;
     },
-    cookie: (state, action) => {
-      state.name = action.payload;
+    currentLocation: (state, action) => {
+      state.current = action.payload;
+    },
+    setOpen: (state, action) => {
+      state.open = action.payload;
+    },
+    setMessage: (state, action) => {
+      state.message = action.payload;
     },
   },
 });
 
-export const { setIcon, userIsAuth, isToken, userToken, userName, cookie } =
-  userSlice.actions;
+export const {
+  setIcon,
+  userIsAuth,
+  userToken,
+  userName,
+  currentLocation,
+  setOpen,
+  setMessage,
+} = userSlice.actions;
 export default userSlice.reducer;
